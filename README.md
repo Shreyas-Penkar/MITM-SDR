@@ -81,5 +81,17 @@ Attacker : T:1Ghz (while retransmission) / 2Ghz (for reverse shell) R:1.5GHz
 * The exploit.py file also launches a kernel rootkit for hiding the attacker_udp_sink.py process and to hide itself providing extra stealth.
 
 ### exploit.py Details
+* The exploit starts with checking sudo privileges if granted.
+* Then it runs ```netstat -nvlop | grep udp``` to find all the udp bind ports on the system. One of those bind ports has to be the UDP source bind port used by trx_ofdm.py which is useful to us. The exploit grabs the PID of that process and locates the python file using ```ps -ef -q <PID>``` and ```pwdx <PID>```
+* Once the python file is located, the exploit opens the file and checks if udp_source, udp_port, any one of these -(Osmocom sink,LimeSDR sink,or USRP sink) is present or not. If yes, then this is the file we were looking for, and the exploit breaks out of the for loop intended to repeat the above process for all PIDs obtained after running ```netstat -nvlop | grep udp``` (since, there could be multiple programs on the system using udp communication, so we need to find which PId corresponds to trx_ofdm.py)
+* The exploit does not edit trx_ofdm.py since it would br very suspicious if the source code is changed, instead we will infect the library files of GNURadio so that we can achieve MITM without alerting the victim.
+* The GNURadio library files are located in ```/usr/lib/python3/dist-packages/gnuradio```.
+* Inside this directory the udp sink ports were changed in the file ```blocks/blocks_swig6.py``` and usrp center frequency was changed in the file ```uhd/uhd_swig.py```
+* LimeSDR center frequency was changed in ```/usr/lib/python3/dist-packages/limesdr/limesdr_swig.py```
+* Osmocom center frequency was changed in ```/usr/lib/python3/dist-packages/osmosdr/osmosdr_swig.py```
+* After infecting the above library files, the exploit kills the trx_ofdm.py process using its PID by ```kill -9 <PID>```
+* Then the exploit launches the attacker_udp_sink.py under the name ```tmp/config-err-P5f3YDS``` and launches it. This file is responsible for the interception of udp communication between trx_ofdm.py and udp_sink.py enabling us to run reverse shell.
+* Then the exploit relaunches the target process trx_ofdm.py. Now the library files are infected, so the program will have changed its udp ports and SDR transmission frequency allowing MITM and reverse shell.
+* Finally, the exploit launches a kernel rootkit contained in the rootkit folder to hide the attacker_udp_sink.py and the rootkit itself from userspace to avoid detection thus providing stealth.
 
 ### How to Run
