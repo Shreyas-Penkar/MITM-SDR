@@ -101,7 +101,7 @@ Attacker : T:1Ghz (while retransmission) / 2Ghz (for reverse shell) R:1.5GHz
 * Osmocom center frequency was changed in ```/usr/lib/python3/dist-packages/osmosdr/osmosdr_swig.py```
 * After infecting the above library files, the exploit kills the trx_ofdm.py process using its PID by ```kill -9 <PID>```
 * Then the exploit launches the **attacker_udp_sink.py** under the name ```tmp/config-err-P5f3YDS``` and launches it. This file is responsible for the interception of udp communication between **trx_ofdm.py** and **udp_sink.py** enabling us to run reverse shell.
-* Then the exploit relaunches the target process trx_ofdm.py. Now the library files are infected, so the program will have changed its udp ports and SDR transmission frequency allowing MITM and reverse shell.
-* Finally, the exploit launches a **kernel rootkit** contained in the rootkit folder to hide the **attacker_udp_sink.py** and the rootkit itself from userspace to avoid detection thus providing stealth.
+* Then the exploit relaunches the target process trx_ofdm.py using its path. Now the library files are infected, so the program will have changed its udp ports and SDR transmission frequency allowing MITM and reverse shell.
+* Finally, the exploit launches a **kernel rootkit** contained in the rootkit folder using ```insmod rootkit.ko``` to hide the **attacker_udp_sink.py** and the rootkit itself from userspace to avoid detection thus providing stealth.
 
 ### How to Run
