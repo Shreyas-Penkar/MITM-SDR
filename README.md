@@ -44,6 +44,8 @@ This exploit/malware infects the GNURadio python files to change the UDP ports o
   |
   |__ exploit.py -> The main exploit program which will infect the target's machine and provide reverse shell (explained in detail below)
   |
+  |__ exploit -> The binary version of exploit.py created using pyinstaller. This binary can be used to obfuscate it inside other binaries.
+  |
   |__ attacker_udp_sink.py -> A malicious udp_sink injector which injects between the UDP Sink connection to filter the messages and run the commands   sent by the attacker system and return an output back to attacker SDR.
   
 ```
