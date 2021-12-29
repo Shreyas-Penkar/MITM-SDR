@@ -48,6 +48,16 @@ It also consists of a Linux based Rootkit to hide the malicious process and the 
   |__ attacker_udp_sink.py -> A malicious udp_sink injector which injects between the UDP Sink connection to filter the messages and run the commands   sent by the attacker system and return an output back to attacker SDR.
   
 ```
+  * **rootkit** folder consists of the files related to the kernel rootkit built to hide the **attacker_udp_sink.py** process and the rootkit itself.
+```
+  rootkit
+  |
+  |__ rootkit.c -> The main rootkit program which will hide the **attacker_udp_sink.py** process and the rootkit itself from userspace programs and sysadmins.
+  |
+  |__ rootkit.ko -> The kernel object created from rootkit.c. This file will be inserted into the kernel usind insmod command.
+  |
+  |__ Makefile -> instructions for building rootkit.c malicious kernel driver.
+```
 
 ### EXPLANATION
 * The environment starts with two Linux machines, each with an connected full duplex SDR, running the **trx_ofdm.py** script for OFDM text communication with each other. Suppose Victim 1 transmits at 1GHz and receives at 2 GHz and Victim - 2 transmits at 2GHz and receives at 1 GHz. **udp_source.py** and **udp_sink.py** are used to send and receive text messages respectively.
