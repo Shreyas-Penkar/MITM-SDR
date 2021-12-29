@@ -50,7 +50,7 @@ It also consists of a Linux based Rootkit to hide the malicious process and the 
 ```
 
 ### EXPLANATION
-* The environment starts with two Linux machines, each with an connected full duplex SDR, runnin the **trx_ofdm.py** script for OFDM text communication with each other. Suppose Victim 1 transmits at 1GHz and receives at 2 GHz and Victim - 2 transmits at 2GHz and receives at 1 GHz. **udp_source.py** and **udp_sink.py** are used to send and receive text messages respectively.
+* The environment starts with two Linux machines, each with an connected full duplex SDR, running the **trx_ofdm.py** script for OFDM text communication with each other. Suppose Victim 1 transmits at 1GHz and receives at 2 GHz and Victim - 2 transmits at 2GHz and receives at 1 GHz. **udp_source.py** and **udp_sink.py** are used to send and receive text messages respectively.
 
 * The attacker environment begins with runnning **trx_ofdm.py** script for OFDM text communication, running **reverse_shell.py** to operate the reverse shell and **udp_sink.py** to recieve the text from trx_ofdm.py.The attacker SDR transmits at 1GHz and receives at 1.5 GHz.
 
@@ -65,7 +65,7 @@ Attacker : T:1Ghz (while retransmission) / 2Ghz (for reverse shell) R:1.5GHz
 
 * The exploit infects the GNURadio python library files, and changes the udp sink ports, osmocom, limeSDR and USRP sink center frequencies in such a way that the Victim - 1 transmit frequency is changed from 1Ghz to 1.5 Ghz which means that all data is now routed to attacker SDR instead of Victim - 2 causing a Man in the Middle condition (see figure).
 
-* Now if Victim - 1 sends a text for transmission, it will be recieved by attacker SDR which will check whether the text is a message or a reverse shell output. The string "%@#" is added at the start of every reverse shell command or reverse shell output. If the recieved text is a message, then it is retransmitted to Victim - 2 as it is a message sent by Victim - 1. If the text is a reverse shell output, the udp_sink.py sends it ot reverse_shell.py for viewing.
+* Now if Victim - 1 sends a text for transmission, it will be recieved by attacker SDR which will check whether the text is a message or a reverse shell output. The string "%@#" is added at the start of every reverse shell command or reverse shell output. If the recieved text is a message, then it is retransmitted to Victim - 2 as it is a message sent by Victim - 1. If the text is a reverse shell output, **the udp_sink.py** sends it to **reverse_shell.py** for viewing.
 * If Victim - 2 sends a message to Victim - 1 it is directly transmitted to Victim - 1 without any breaks.
 * This makes the communication continous as we are only intercepting Victim - 1 messages and retransmitting them.
 
@@ -75,23 +75,23 @@ Victim-1 : T:**1.5Ghz** R:2Ghz
 Victim-2 : T:2Ghz R:1Ghz
 Attacker : T:1Ghz (while retransmission) / 2Ghz (for reverse shell) R:1.5GHz 
 ```
-* Now when reverse shell is to be used, the transmission frequency is changed to 2Ghz and the command is sent to Victim-1. Due to the exploit, the attacker_udp_sink.py intercepts the trx_ofdm.py and udp_sink.py communication. attacker_udp_sink.py check whether the text is a message or a reverse shell command.If the recieved text is a message, then it is sent to udp_sink for viewing as it is a message sent by Victim - 2. If the text is a reverse shell output, the attacker_udp_sink.py executes the shell command and sends the output for transmission to Attacker SDR.
+* Now when reverse shell is to be used, the transmission frequency is changed to 2Ghz and the command is sent to Victim-1. Due to the exploit, the **attacker_udp_sink.py** intercepts the **trx_ofdm.py** and **udp_sink.py** communication. **attacker_udp_sink.py** checks whether the text is a message or a reverse shell command. If the recieved text is a message, then it is sent to udp_sink for viewing as it is a message sent by Victim - 2. If the text is a reverse shell output, **attacker_udp_sink.py** executes the shell command and sends the output for transmission to Attacker SDR.
 
 * In this way, the Victim-Victim communicaion is preserved with stealth, and reverse shell is also obtained since we intercept all messages from Victim-1.
-* The exploit.py file also launches a kernel rootkit for hiding the attacker_udp_sink.py process and to hide itself providing extra stealth.
+* The **exploit.py** file also launches a **kernel rootkit** for hiding the **attacker_udp_sink.py** process and to hide itself providing extra stealth.
 
 ### exploit.py Details
 * The exploit starts with checking sudo privileges if granted.
-* Then it runs ```netstat -nvlop | grep udp``` to find all the udp bind ports on the system. One of those bind ports has to be the UDP source bind port used by trx_ofdm.py which is useful to us. The exploit grabs the PID of that process and locates the python file using ```ps -ef -q <PID>``` and ```pwdx <PID>```
-* Once the python file is located, the exploit opens the file and checks if udp_source, udp_port, any one of these -(Osmocom sink,LimeSDR sink,or USRP sink) is present or not. If yes, then this is the file we were looking for, and the exploit breaks out of the for loop intended to repeat the above process for all PIDs obtained after running ```netstat -nvlop | grep udp``` (since, there could be multiple programs on the system using udp communication, so we need to find which PId corresponds to trx_ofdm.py)
+* Then it runs ```netstat -nvlop | grep udp``` to find all the udp bind ports on the system. One of those bind ports has to be the UDP source bind port used by **trx_ofdm.py** which is useful to us. The exploit grabs the PID of that process and locates the python file using ```ps -ef -q <PID>``` and ```pwdx <PID>```
+* Once the python file is located, the exploit opens the file and checks if udp_source, udp_port, any one of these -(Osmocom sink,LimeSDR sink,or USRP sink) is present or not. If yes, then this is the file we were looking for, and the exploit breaks out of the for loop intended to repeat the above process for all PIDs obtained after running ```netstat -nvlop | grep udp``` (since, there could be multiple programs on the system using udp communication, so we need to find which PId corresponds to **trx_ofdm.py**)
 * The exploit does not edit trx_ofdm.py since it would br very suspicious if the source code is changed, instead we will infect the library files of GNURadio so that we can achieve MITM without alerting the victim.
 * The GNURadio library files are located in ```/usr/lib/python3/dist-packages/gnuradio```.
 * Inside this directory the udp sink ports were changed in the file ```blocks/blocks_swig6.py``` and usrp center frequency was changed in the file ```uhd/uhd_swig.py```
 * LimeSDR center frequency was changed in ```/usr/lib/python3/dist-packages/limesdr/limesdr_swig.py```
 * Osmocom center frequency was changed in ```/usr/lib/python3/dist-packages/osmosdr/osmosdr_swig.py```
 * After infecting the above library files, the exploit kills the trx_ofdm.py process using its PID by ```kill -9 <PID>```
-* Then the exploit launches the attacker_udp_sink.py under the name ```tmp/config-err-P5f3YDS``` and launches it. This file is responsible for the interception of udp communication between trx_ofdm.py and udp_sink.py enabling us to run reverse shell.
+* Then the exploit launches the **attacker_udp_sink.py** under the name ```tmp/config-err-P5f3YDS``` and launches it. This file is responsible for the interception of udp communication between **trx_ofdm.py** and **udp_sink.py** enabling us to run reverse shell.
 * Then the exploit relaunches the target process trx_ofdm.py. Now the library files are infected, so the program will have changed its udp ports and SDR transmission frequency allowing MITM and reverse shell.
-* Finally, the exploit launches a kernel rootkit contained in the rootkit folder to hide the attacker_udp_sink.py and the rootkit itself from userspace to avoid detection thus providing stealth.
+* Finally, the exploit launches a **kernel rootkit** contained in the rootkit folder to hide the **attacker_udp_sink.py** and the rootkit itself from userspace to avoid detection thus providing stealth.
 
 ### How to Run
