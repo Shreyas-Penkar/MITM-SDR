@@ -60,7 +60,7 @@ Victim-2 : T:2Ghz R:1Ghz
 Attacker : T:1Ghz (while retransmission) / 2Ghz (for reverse shell) R:1.5GHz  
 ```
 * Then the exploit file (**exploit.py**) is obfuscated into a useful application and is sent to Victim - 1 who runs the files with sudo privileges.
-* The exploit.py file runs and installs **attacker_udp_sink.py** and a **kernel rootkit** onto the system.
+* The exploit.py file runs and installs **attacker_udp_sink.py** onto the system.
 
 * The exploit infects the GNURadio python library files, and changes the udp sink ports, osmocom, limeSDR and USRP sink center frequencies in such a way that the Victim - 1 transmit frequency is changed from 1Ghz to 1.5 Ghz which means that all data is now routed to attacker SDR instead of Victim - 2 causing a Man in the Middle condition (see figure).
 
@@ -76,8 +76,7 @@ Attacker : T:1Ghz (while retransmission) / 2Ghz (for reverse shell) R:1.5GHz
 ```
 * Now when reverse shell is to be used, the transmission frequency is changed to 2Ghz and the command is sent to Victim-1. Due to the exploit, the **attacker_udp_sink.py** intercepts the **trx_ofdm.py** and **udp_sink.py** communication. **attacker_udp_sink.py** checks whether the text is a message or a reverse shell command. If the recieved text is a message, then it is sent to udp_sink for viewing as it is a message sent by Victim - 2. If the text is a reverse shell output, **attacker_udp_sink.py** executes the shell command and sends the output for transmission to Attacker SDR.
 
-* In this way, the Victim-Victim communicaion is preserved with stealth, and reverse shell is also obtained since we intercept all messages from Victim-1.
-* The **exploit.py** file also launches a **kernel rootkit** for hiding the **attacker_udp_sink.py** process and to hide itself providing extra stealth.
+* In this way, the Victim-Victim communicaion is preserved with stealth, and reverse shell is also obtained since we intercept all messages from Victim-1 and MITM with reverse shell is established.
 
 ### exploit.py Details
 * The exploit starts with checking sudo privileges if granted.
