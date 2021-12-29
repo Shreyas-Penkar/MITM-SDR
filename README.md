@@ -17,8 +17,8 @@ It also consists of a Linux based Rootkit to hide the malicious process and the 
 ### DIRECTORY STRUCTURE
 
   * **attacker** folder consists of the python scripts which the attacker system has to run in order to operate the reverse shell obtained.
-  attacker
 ```  
+  attacker
   |
   |__ trx_ofdm.py -> The attacker SDR GNURadio OFDM text transfer script to operate the reverse shell and to forward the text recieved from victim to second victim to allow MITM between two devices.
   |
@@ -41,7 +41,7 @@ It also consists of a Linux based Rootkit to hide the malicious process and the 
 
   * **exploit** folder consists of the python scripts which the attacker will send the victim systems to be run so that the victim systems get infected and provide reverse shell.
 ```
-  victim
+  exploit
   |
   |__ exploit.py -> The main exploit program which will infect the target's machine and provide reverse shell (explained in detail below)
   |
