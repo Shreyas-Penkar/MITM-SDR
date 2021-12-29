@@ -12,6 +12,7 @@ It also consists of a Linux based Rootkit to hide the malicious process and the 
 * The GNURadio program used for victim communication is OFDM message transfer having strictly one UDP Source and UDP Sink to pipe the text message to the terminal.
 
 ### SCHEMATICS
+![MITM SDR SCHEMATICS IMAGE (CLICK TO VIEW)](https://github.com/Shreyas-Penkar/MITM-SDR/blob/main/mitm_sdr.png?raw=true)
 
 ### DIRECTORY STRUCTURE
 
