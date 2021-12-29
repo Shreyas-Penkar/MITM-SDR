@@ -3,7 +3,6 @@ An SDR based GNURadio client-side exploit/malware which injects itself between t
 
 ### DESCRIPTION
 This exploit/malware infects the GNURadio python files to change the UDP ports of Source and Sinks and also changes the Center Frequency of Osmocom, LimeSDR and USRP Sinks allowing the attacker SDR to inject between the two SDR communicating devices and provide a reverse shell to the attacker.
-It also consists of a Linux based Rootkit to hide the malicious process and the rootkit itself, providing stealth to the attacker.
 
 ### ASSUMPTIONS
 * Victim SDRs and the attacker SDR must all be full duplex.
@@ -47,16 +46,6 @@ It also consists of a Linux based Rootkit to hide the malicious process and the 
   |
   |__ attacker_udp_sink.py -> A malicious udp_sink injector which injects between the UDP Sink connection to filter the messages and run the commands   sent by the attacker system and return an output back to attacker SDR.
   
-```
-  * **rootkit** folder consists of the files related to the kernel rootkit built to hide the **attacker_udp_sink.py** process and the rootkit itself.
-```
-  rootkit
-  |
-  |__ rootkit.c -> The main rootkit program which will hide the **attacker_udp_sink.py** process and the rootkit itself from userspace programs and sysadmins.
-  |
-  |__ rootkit.ko -> The kernel object created from rootkit.c. This file will be inserted into the kernel usind insmod command.
-  |
-  |__ Makefile -> instructions for building rootkit.c malicious kernel driver.
 ```
 
 ### EXPLANATION
@@ -102,6 +91,5 @@ Attacker : T:1Ghz (while retransmission) / 2Ghz (for reverse shell) R:1.5GHz
 * After infecting the above library files, the exploit kills the trx_ofdm.py process using its PID by ```kill -9 <PID>```
 * Then the exploit launches the **attacker_udp_sink.py** under the name ```tmp/config-err-P5f3YDS``` and launches it. This file is responsible for the interception of udp communication between **trx_ofdm.py** and **udp_sink.py** enabling us to run reverse shell.
 * Then the exploit relaunches the target process trx_ofdm.py using its path. Now the library files are infected, so the program will have changed its udp ports and SDR transmission frequency allowing MITM and reverse shell.
-* Finally, the exploit launches a **kernel rootkit** contained in the rootkit folder using ```insmod rootkit.ko``` to hide the **attacker_udp_sink.py** and the rootkit itself from userspace to avoid detection thus providing stealth.
 
 ### How to Run
