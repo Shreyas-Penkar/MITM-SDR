@@ -14,30 +14,36 @@ It also consists of a Linux based Rootkit to hide the malicious process and the 
 ### EXPLANATION
 
 ### DIRECTORY STRUCTURE
-```
-  "attacker" folder consists of the python scripts which the attacker system has to run in order to operate the reverse shell obtained.
+
+  * **attacker** folder consists of the python scripts which the attacker system has to run in order to operate the reverse shell obtained.
+  attacker
+```  
   |
-  |__ trx_ofdm.py -> The attacker SDR GNURadio OFDM text transfer script to operate the reverse shell and to forward the text recieved from victim to     |                  second victim to allow MITM between two devices.
+  |__ trx_ofdm.py -> The attacker SDR GNURadio OFDM text transfer script to operate the reverse shell and to forward the text recieved from victim to second victim to allow MITM between two devices.
   |
   |__ reverse_shell.py -> The script to operate the reverse shell program along with trx_ofdm.py
   |
   |__ udp_sink.py -> The script to diffrentiate between the messages sent by the victim as reverse shell output or messages intended for second victim.
                      The script uses the "%@#" notation to filter the messages and react accordingly.
+```
 
-
-  "victim" folder consists of the python scripts which the victim systems has to run to communicate with other victim systems.
+  * **victim** folder consists of the python scripts which the victim systems has to run to communicate with other victim systems.
+```
+  victim
   |
   |__ trx_ofdm.py -> A SDR GNURadio text message transfer program which uses OFDM and UDP Source/Sinks for full duplex text transfer between devices.
   |
   |__ udp_source.py -> Python script to communicate text to UDP Source in trx_ofdm.py program.
   |
   |__ udp_sink.py -> Python script to communicate text to UDP Sink in trx_ofdm.py program.
+```
 
-
-  "exploit" folder consists of the python scripts which the attacker will send the victim systems to be run so that the victim systems get infected and   provide reverse shell.
+  * **exploit** folder consists of the python scripts which the attacker will send the victim systems to be run so that the victim systems get infected and provide reverse shell.
+```
+  victim
   |
   |__ exploit.py -> The main exploit program which will infect the target's machine and provide reverse shell (explained in detail below)
   |
-  |__ attacker_udp_sink.py -> A malicious udp_sink injector which injects between the UDP Sink connection to filter the messages and run the comands     |                           sent by the attacker system and return an output back to attacker SDR.
+  |__ attacker_udp_sink.py -> A malicious udp_sink injector which injects between the UDP Sink connection to filter the messages and run the commands   sent by the attacker system and return an output back to attacker SDR.
   
 ```
