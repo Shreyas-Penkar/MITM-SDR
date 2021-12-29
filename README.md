@@ -54,10 +54,11 @@ It also consists of a Linux based Rootkit to hide the malicious process and the 
 * The attacker environment begins with runnning **trx_ofdm.py** script for OFDM text communication, running **reverse_shell.py** to operate the reverse shell and **udp_sink.py** to recieve the text from trx_ofdm.py.The attacker SDR transmits at 1GHz and receives at 1.5 GHz.
 
 * So basically before exploit
+```
 Victim-1 : T:1Ghz R:2Ghz
 Victim-2 : T:2Ghz R:1Ghz
 Attacker : T:1Ghz (while retransmission) / 2Ghz (for reverse shell) R:1.5GHz  
-
+```
 * Then the exploit file (**exploit.py**) is obfuscated into a useful application and is sent to Victim - 1 who runs the files with sudo privileges.
 * The exploit.py file runs and installs **attacker_udp_sink.py** and a **kernel rootkit** onto the system.
 
@@ -68,10 +69,11 @@ Attacker : T:1Ghz (while retransmission) / 2Ghz (for reverse shell) R:1.5GHz
 * This makes the communication continous as we are only intercepting Victim - 1 messages and retransmitting them.
 
 * So basically after exploit (Victim -1 transmission frequency is changed by exploit)
+```
 Victim-1 : T:**1.5Ghz** R:2Ghz
 Victim-2 : T:2Ghz R:1Ghz
 Attacker : T:1Ghz (while retransmission) / 2Ghz (for reverse shell) R:1.5GHz 
-
+```
 * Now when reverse shell is to be used, the transmission frequency is changed to 2Ghz and the command is sent to Victim-1. Due to the exploit, the attacker_udp_sink.py intercepts the trx_ofdm.py and udp_sink.py communication. attacker_udp_sink.py check whether the text is a message or a reverse shell command.If the recieved text is a message, then it is sent to udp_sink for viewing as it is a message sent by Victim - 2. If the text is a reverse shell output, the attacker_udp_sink.py executes the shell command and sends the output for transmission to Attacker SDR.
 
 * In this way, the Victim-Victim communicaion is preserved with stealth, and reverse shell is also obtained since we intercept all messages from Victim-1.
