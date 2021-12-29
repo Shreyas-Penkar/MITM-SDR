@@ -11,6 +11,9 @@ It also consists of a Linux based Rootkit to hide the malicious process and the 
 * The exploit/malware has sudo access to the victim Linux system.
 * The GNURadio program used for victim communication is OFDM message transfer having strictly one UDP Source and UDP Sink to pipe the text message to the terminal.
 
+### SCHEMATICS
+
+
 ### EXPLANATION
 
 ### DIRECTORY STRUCTURE
@@ -47,3 +50,6 @@ It also consists of a Linux based Rootkit to hide the malicious process and the 
   |__ attacker_udp_sink.py -> A malicious udp_sink injector which injects between the UDP Sink connection to filter the messages and run the commands   sent by the attacker system and return an output back to attacker SDR.
   
 ```
+### exploit.py Details
+
+### How to Run
