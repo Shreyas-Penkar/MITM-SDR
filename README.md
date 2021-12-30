@@ -98,13 +98,13 @@ Attacker : T:1Ghz (while retransmission) / 2Ghz (for reverse shell) R:1.5GHz
 ### How to Run
 * Obtain 3 full duplex SDRs (LimeSDR, USRP, BladeRF) and connect them to 3 Linux machines (1 each).
 * On two of the machines run ```sudo apt-get install gnuradio``` and also install drivers for that SDR device.
-* clone the repository on all machines by running ```git clone https://github.com/Shreyas-Penkar/MITM-SDR```
+* clone the repository on all machines by running ```git clone https://github.com/Shreyas-Penkar/MITM-SDR.git```
 * For the two victim devices open ```gnuradio-companion``` in victim folder and select your SDR device as the Source and Sink. (3 options have been provided in the **trx_ofdm.grc** flowgraph)
 * Make sure you have set the SDR Source and Sink Frequencies correctly for the two Machines.
 * Run the flowgraph and run ```python3 udp_sink.py``` and ```python3 udp_source.py``` in two terminals.
 * Now you have 2 SDR connected machines communicating to each other.
 * On third machine run the trx_ofdm.grc flowgraph after selecting your SDR device as the Source and Sink. Also run ```python3 udp_sink.py``` and ```python3 reverse_shell.py``` in two terminals from the attacker folder. Now the attacker has been set up.
-* Now on one of the victim machines, run ```pytohn3 exploit.py``` file or ```./exploit``` or the obfuscated file from the exploit folder.
+* Now on one of the victim machines, run ```python3 exploit.py``` file or ```./exploit``` or the obfuscated file from the exploit folder.
 * Now you should receive a working reverse shell on **reverse_shell.py**.
 
 ### Using Docker
