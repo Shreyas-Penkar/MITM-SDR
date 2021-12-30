@@ -106,3 +106,13 @@ Attacker : T:1Ghz (while retransmission) / 2Ghz (for reverse shell) R:1.5GHz
 * On third machine run the trx_ofdm.grc flowgraph after selecting your SDR device as the Source and Sink. Also run ```python3 udp_sink.py``` and ```python3 reverse_shell.py``` in two terminals from the attacker folder. Now the attacker has been set up.
 * Now on one of the victim machines, run ```pytohn3 exploit.py``` file or ```./exploit``` or the obfuscated file from the exploit folder.
 * Now you should receive a working reverse shell on **reverse_shell.py**.
+
+### Using Docker
+* The docker image is located at ```https://hub.docker.com/r/shreyaspenkar8/mitm-sdr```
+* Use ```docker pull shreyaspenkar8/mitm-sdr:latest``` to pull the image or do it using docker desktop.
+* Run the image in a container using ```docker run -it shreyaspenkar8/mitm-sdr:latest``` or using docker desktop.
+* All the dependencies and code are preinstalled.
+* The trx_ofdm.py will not run since it uses QT GUI and docker instance doesn't have a GUI component.
+* The exploit.py and other files will work.
+* It is recommended that you test this project in Virtual Machines instead of docker.
+* You can remove the QT GUI component from the trx_ofdm.py to make it work on docker. 
