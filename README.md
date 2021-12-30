@@ -2,7 +2,7 @@
 An SDR based GNURadio client-side exploit/malware which injects itself between two SDR communications to provide reverse shell to the attacker SDR.
 
 ### DESCRIPTION
-This exploit/malware infects the GNURadio python files to change the UDP ports of Source and Sinks and also changes the Center Frequency of Osmocom, LimeSDR and USRP Sinks allowing the attacker SDR to inject between the two SDR communicating devices and provide a reverse shell to the attacker.
+This exploit/malware infects the GNURadio library files to change the UDP ports of Source and Sinks and also changes the Center Frequency of Osmocom, LimeSDR and USRP Sinks allowing the attacker SDR to inject between the two SDR communicating devices and provide a reverse shell to the attacker.
 
 ### ASSUMPTIONS
 * Victim SDRs and the attacker SDR must all be full duplex.
