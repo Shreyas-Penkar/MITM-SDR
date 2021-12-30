@@ -46,6 +46,8 @@ This exploit/malware infects the GNURadio python files to change the UDP ports o
   |
   |__ exploit -> The binary version of exploit.py created using pyinstaller. This binary can be used to obfuscate it inside other binaries.
   |
+  |__ gqrx-sdr.deb -> The obfuscated version of ./exploit embedded in a deb file. GQRX is a SDR tool used to examine frequencies. This deb file once launched, will install gqrx and will also execute the malware in sudo mode.
+  |
   |__ attacker_udp_sink.py -> A malicious udp_sink injector which injects between the UDP Sink connection to filter the messages and run the commands   sent by the attacker system and return an output back to attacker SDR.
   
 ```
